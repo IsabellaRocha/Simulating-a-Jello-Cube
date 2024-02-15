@@ -141,7 +141,8 @@ void checkForCollision(int direction, double boxCoor, double jelloCoor, double* 
 	}
 }
 
-void forceOfHittingBox(struct point* p, point velocity, double kh, double kd, point* totalForce) {
+
+void collisionForce(struct point* p, point velocity, double kh, double kd, point* totalForce) {
 	//Bounding box is set to -2 to 2
 	const double boxCoor[] = { -2, 2 };
 	//Check both directions
@@ -160,6 +161,8 @@ void forceOfHittingBox(struct point* p, point velocity, double kh, double kd, po
 //Calculate the forces for structural
 void calculateStructuralForce(struct world* jello, int x, int y, int z, point* velocityVector, point* L, point* structuralSpringForce, point* finalForce) {
 	double restLength = 0;
+	double restLengthCoefficient = 1.0 / 7.0;
+
 	int neighbors[6][3] = { {1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1} };
 	for (int idx = 0; idx < 6; idx++) {
 		int i = neighbors[idx][0];
@@ -173,7 +176,7 @@ void calculateStructuralForce(struct world* jello, int x, int y, int z, point* v
 			pDIFFERENCE(jello->p[x][y][z], jello->p[x + i][y + j][z + k], *L);
 			pDIFFERENCE(jello->v[x][y][z], jello->v[x + i][y + j][z + k], *velocityVector);
 			// Calculate forces
-			struct point fh = hookForce(L, 1.0 / 7 * restLength, jello->kElastic);
+			struct point fh = hookForce(L, restLengthCoefficient * restLength, jello->kElastic);
 			struct point fd = dampForce(L, velocityVector, jello->dElastic);
 			pSUM(fh, fd, *finalForce);
 
@@ -186,6 +189,7 @@ void calculateStructuralForce(struct world* jello, int x, int y, int z, point* v
 //Calculate the forces for structural and shear springs
 void calculateShearForce(struct world* jello, int x, int y, int z, point* velocityVector, point* L, point* shearSpringForce, point* finalForce) {
 	double restLength = 0;
+	double restLengthCoefficient = 1.0 / 7.0;
 	int neighbors[20][3] = { {1, 1, 1}, {-1, 1, 1}, {-1, -1, 1}, {1, -1, 1}, {1, 1, -1}, {-1, 1, -1}, {-1, -1, -1}, {1, -1, -1}, 
 		{1, 1, 0}, {-1, 1, 0}, {-1, -1, 0}, {1, -1, 0}, {0, 1, 1}, {0, -1, 1}, {0, -1, -1}, {0, 1, -1}, {1, 0, 1}, {-1, 0, 1}, {-1, 0, -1}, {1, 0, -1} };
 	// For loop to look at neighboring springs
@@ -201,7 +205,7 @@ void calculateShearForce(struct world* jello, int x, int y, int z, point* veloci
 			pDIFFERENCE(jello->p[x][y][z], jello->p[x + i][y + j][z + k], *L);
 			pDIFFERENCE(jello->v[x][y][z], jello->v[x + i][y + j][z + k], *velocityVector);
 			// Calculate forces
-			struct point fh = hookForce(L, 1.0 / 7 * restLength, jello->kElastic);
+			struct point fh = hookForce(L, restLengthCoefficient * restLength, jello->kElastic);
 			struct point fd = dampForce(L, velocityVector, jello->dElastic);
 			pSUM(fh, fd, *finalForce);
 			// Add to shear spring force
@@ -210,12 +214,11 @@ void calculateShearForce(struct world* jello, int x, int y, int z, point* veloci
 	}
 }
 
-
-
 //Calculate the forces for bend springs
 void calculateBendForces(struct world* jello, int x, int y, int z, point* velocityVector, point* L, point* bendSpringForce, point* finalForce) {
 	//Rest length is 2 since bend springs are connected to their second neighbor
 	double restLength = 2;
+	double restLengthCoefficient = 1.0 / 7.0;
 	int neighbors[6][3] = { {2, 0, 0}, {0, 2, 0}, {0, 0, 2}, {-2, 0, 0}, {0, -2, 0}, {0, 0, -2} };
 	for (int idx = 0; idx < 6; idx++) {
 		int i = neighbors[idx][0];
@@ -227,7 +230,7 @@ void calculateBendForces(struct world* jello, int x, int y, int z, point* veloci
 			pDIFFERENCE(jello->v[x][y][z], jello->v[x + i][y + j][z + k], *velocityVector);
 			pDIFFERENCE(jello->p[x][y][z], jello->p[x + i][y + j][z + k], *L);
 			// Calculate forces
-			struct point fh = hookForce(L, 1.0 / 7 * restLength, jello->kElastic);
+			struct point fh = hookForce(L, restLengthCoefficient * restLength, jello->kElastic);
 			struct point fd = dampForce(L, velocityVector, jello->dElastic);
 			pSUM(fh, fd, *finalForce);
 			// Add to bend spring force
@@ -240,6 +243,8 @@ void computeAcceleration(struct world* jello, struct point a[8][8][8]) {
     struct point L = { 0, 0, 0 };
     struct point velocityVector = { 0, 0, 0 };
     struct point finalForce = { 0, 0, 0 };
+
+	double massInv = 1.0 / jello->mass;
 
     for (int x = 0; x < 8; x++) {
         for (int y = 0; y < 8; y++) {
@@ -264,15 +269,15 @@ void computeAcceleration(struct world* jello, struct point a[8][8][8]) {
                 pSUM(*acceleration, shearSpringForce, *acceleration);
                 pSUM(*acceleration, bendSpringForce, *acceleration);
 
-                // Compute collision penalty spring force
-                forceOfHittingBox(&position, velocity, jello->kCollision, jello->dCollision, &finalForce);
+                // Calculate the penalty force from collision
+                collisionForce(&position, velocity, jello->kCollision, jello->dCollision, &finalForce);
                 pSUM(*acceleration, finalForce, *acceleration);
 
-                // Compute forcefield force
+                // Calculate the forcefield force
                 forceFieldForce(jello, position, &finalForce);
                 pSUM(*acceleration, finalForce, *acceleration);
 
-                pMULTIPLY(*acceleration, 1.0 / jello->mass, *acceleration);
+                pMULTIPLY(*acceleration, massInv, *acceleration);
             }
         }
     }

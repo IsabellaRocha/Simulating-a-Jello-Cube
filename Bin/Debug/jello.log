@@ -1,3 +1,12 @@
-﻿  physics.cpp
-C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\physics.cpp(131,23): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+﻿  jello.cpp
+C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(136,51): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(137,50): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(138,49): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(139,50): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(140,50): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(141,49): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(142,48): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(143,49): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(148,42): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(200,9): warning C4101: 'i': unreferenced local variable
   jello.vcxproj -> C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\Bin\Debug\jello.exe

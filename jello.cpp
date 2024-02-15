@@ -4,7 +4,7 @@
   "Jello Cube" Assignment 1 starter code
 
   Your name:
-  <write your name here>
+  Isabella Rocha
 
 */
 
@@ -221,11 +221,11 @@ void doIdle()
     {
         // insert code which appropriately performs one step of the cube simulation:
 
-        if (strcmp(jello.integrator, "Euler") == 0) {
-            Euler(&jello);
+        if (strcmp(jello.integrator, "RK4") == 0) {
+            RK4(&jello);
         }
         else {
-            RK4(&jello);
+            Euler(&jello);
         }
     }
 
