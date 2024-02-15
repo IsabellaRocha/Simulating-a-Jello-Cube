@@ -9,4 +9,7 @@ C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-
 C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(143,49): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
 C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(148,42): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
 C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\jello.cpp(200,9): warning C4101: 'i': unreferenced local variable
+  physics.cpp
+C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\physics.cpp(133,23): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  Generating Code...
   jello.vcxproj -> C:\Users\imr84\OneDrive\Desktop\csci520\starter-csci520-assign1\starter-csci520-assign1\Bin\Debug\jello.exe

@@ -12,7 +12,8 @@
 point hookForce(point* L, double restLength, double kh) {
 	double lenOfVector = 0;
 	lenOfVector = pLENGTH(*L);
-	if (lenOfVector == 0) return { 0, 0, 0 };
+	if (lenOfVector == 0) 
+		return { 0, 0, 0 };
 	//Apply hooks law: fh = -kh(|L|-R)(L/|L|), L is vector pointing from B to A, R is spring at rest length
 	point hookForce = { 0, 0, 0 };
 	pMULTIPLY(*L, -kh * (lenOfVector - restLength) / lenOfVector, hookForce);
@@ -22,7 +23,8 @@ point hookForce(point* L, double restLength, double kh) {
 point dampForce(point* L, point* velocity, double kd) {
 	double lenOfVector = 0;
 	lenOfVector = pLENGTH(*L);
-	if (lenOfVector == 0) return { 0, 0, 0 };
+	if (lenOfVector == 0) 
+		return { 0, 0, 0 };
 	//Apply damping in 3D: -kd * (((vA-vB) dot L)/|L|) * (L/|L|)
 	point dampingForce = { 0, 0, 0 };
 	pMULTIPLY(*L, -kd * (pDOTPRODUCT(*velocity, *L)) / lenOfVector / lenOfVector, dampingForce);
@@ -148,7 +150,8 @@ void collisionForce(struct point* p, point velocity, double kh, double kd, point
 	//Check both directions
 	const int directions[] = { 1, -1 };
 	point L = { 0, 0, 0 };
-	memset(totalForce, 0, sizeof(point)); // Clear output force to ensure no force is set
+	// Make sure to get rid of previous forces
+	memset(totalForce, 0, sizeof(point)); 
 
 	// Check for collisions in all directions for x, y, and z coordinates
 	for (int i = 0; i < 2; ++i) {
@@ -179,7 +182,6 @@ void calculateStructuralForce(struct world* jello, int x, int y, int z, point* v
 			struct point fh = hookForce(L, restLengthCoefficient * restLength, jello->kElastic);
 			struct point fd = dampForce(L, velocityVector, jello->dElastic);
 			pSUM(fh, fd, *finalForce);
-
 			// Add to structural spring force
 			pSUM(*structuralSpringForce, *finalForce, *structuralSpringForce);
 		}
